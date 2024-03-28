@@ -82,6 +82,12 @@ void UCapturableSoundWave::GetAvailableAudioInputDevices(const FOnGetAvailableAu
 
 bool UCapturableSoundWave::StartCapture(int32 DeviceId)
 {
+	if(!CaptureAudioDataHandler.IsBound())
+	{
+		UE_LOG(LogRuntimeAudioImporter, Verbose, TEXT("CaptureAudioDataHandler is not bound, using default"));
+		CaptureAudioDataHandler.BindUObject(this, UCapturableSoundWave::AppendAudioDataFromRAW);			
+	}
+	
 #if WITH_RUNTIMEAUDIOIMPORTER_CAPTURE_SUPPORT
 	Audio::FAudioCaptureDeviceParams Params = Audio::FAudioCaptureDeviceParams();
 	Params.DeviceIndex = DeviceId;
@@ -115,7 +121,7 @@ bool UCapturableSoundWave::StartCapture(int32 DeviceId)
 				PCMDataSizeInBytes = TNumericLimits<int32>::Max();
 			}
 
-			WeakThis->AppendAudioDataFromRAW(TArray<uint8>(reinterpret_cast<const uint8*>(PCMData), static_cast<int32>(PCMDataSizeInBytes)), ERuntimeRAWAudioFormat::Float32,
+			WeakThis->CaptureAudioDataHandler.Execute(TArray<uint8>(reinterpret_cast<const uint8*>(PCMData), static_cast<int32>(PCMDataSizeInBytes)), ERuntimeRAWAudioFormat::Float32,
 #if UE_VERSION_NEWER_THAN(4, 25, 0)
 				InSampleRate
 #else

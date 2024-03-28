@@ -20,6 +20,8 @@ DECLARE_DELEGATE_OneParam(FOnGetAvailableAudioInputDevicesResultNative, const TA
 /** Dynamic delegate broadcasting available audio input devices */
 DECLARE_DYNAMIC_DELEGATE_OneParam(FOnGetAvailableAudioInputDevicesResult, const TArray<FRuntimeAudioInputDeviceInfo>&, AvailableDevices);
 
+DECLARE_DELEGATE_FourParams(FCaptureAudioDataHandler, TArray<uint8> /*RAWData*/, ERuntimeRAWAudioFormat /*RAWFormat*/, int32 /*InSampleRate*/, int32 /*NumOfChannels*/);
+
 /**
  * Sound wave that can capture audio data from input devices (eg. microphone)
  */
@@ -34,6 +36,9 @@ public:
 	//~ Begin UImportedSoundWave Interface
 	virtual void BeginDestroy() override;
 	//~ End UImportedSoundWave Interface
+
+
+	FCaptureAudioDataHandler CaptureAudioDataHandler;
 
 	/**
 	 * Create a new instance of the capturable sound wave
