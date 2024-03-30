@@ -85,7 +85,7 @@ bool UCapturableSoundWave::StartCapture(int32 DeviceId)
 	if(!CaptureAudioDataHandler.IsBound())
 	{
 		UE_LOG(LogRuntimeAudioImporter, Verbose, TEXT("CaptureAudioDataHandler is not bound, using default"));
-		CaptureAudioDataHandler.BindUObject(this, UCapturableSoundWave::AppendAudioDataFromRAW);			
+		CaptureAudioDataHandler.BindUObject(this, &UCapturableSoundWave::AppendAudioDataFromRAW);			
 	}
 	
 #if WITH_RUNTIMEAUDIOIMPORTER_CAPTURE_SUPPORT
